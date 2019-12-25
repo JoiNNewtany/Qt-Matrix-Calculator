@@ -38,16 +38,56 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QSpinBox" name="sizeBox"/>
+    <widget class="QSpinBox" name="sizeBox">
+     <property name="prefix">
+      <string>Matrix Size: </string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>99</number>
+     </property>
+    </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QComboBox" name="selectionBox1"/>
+    <widget class="QComboBox" name="selectionBox1">
+     <property name="currentText">
+      <string/>
+     </property>
+    </widget>
    </item>
    <item row="2" column="2">
     <widget class="QComboBox" name="selectionBox2"/>
    </item>
    <item row="2" column="3">
-    <widget class="QComboBox" name="mathBox"/>
+    <widget class="QComboBox" name="mathBox">
+     <item>
+      <property name="text">
+       <string>Addition (+)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Subtraction (-)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Multiplication (*)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Inversion</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Transposition</string>
+      </property>
+     </item>
+    </widget>
    </item>
    <item row="2" column="4">
     <widget class="QPushButton" name="calculateButton">
@@ -64,13 +104,25 @@
     </widget>
    </item>
    <item row="3" column="0" colspan="2">
-    <widget class="QTableWidget" name="matrixTable1"/>
+    <widget class="QTableWidget" name="matrixTable1">
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>30</number>
+     </attribute>
+    </widget>
    </item>
    <item row="3" column="2" colspan="2">
-    <widget class="QTableWidget" name="matrixTable2"/>
+    <widget class="QTableWidget" name="matrixTable2">
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>30</number>
+     </attribute>
+    </widget>
    </item>
    <item row="3" column="4" colspan="2">
-    <widget class="QTableWidget" name="matrixTable3"/>
+    <widget class="QTableWidget" name="matrixTable3">
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>30</number>
+     </attribute>
+    </widget>
    </item>
   </layout>
  </widget>
