@@ -263,6 +263,9 @@ void Widget::on_importButton_clicked()
     // Fill selection boxes if matrix wasn't loaded empty
     if (matrixList.size())
     {
+        ui->selectionBox1->clear();
+        ui->selectionBox2->clear();
+
         for (int i = 0; i < matrixList.size(); i++)
         {
             ui->selectionBox1->addItem("Matrix " + QString::number(i + 1));
@@ -322,5 +325,30 @@ void Widget::on_selectionBox2_currentIndexChanged(int index)
                 ui->matrixTable2->item(i, j)->setText(QString::number(matrixList[index][i][j]));
             }
         }
+    }
+}
+
+void Widget::on_exportButton_clicked()
+{
+    QString dir = QFileDialog::getOpenFileName(this,"Export Location",
+                                               QApplication::applicationDirPath(), "*.txt");
+    QFile file(dir);
+
+    if(file.open(QIODevice::ReadWrite))
+    {
+        QTextStream stream(&file);
+
+        for (int i = 0; i < ui->matrixTable3->rowCount(); i++)
+        {
+            for (int j = 0; j < ui->matrixTable3->columnCount(); j++)
+            {
+                stream << ui->matrixTable3->item(i, j)->text() << " ";
+            }
+            stream << endl;
+        }
+    }
+    else
+    {
+        qDebug() << "ExportError: Unable to write to file.";
     }
 }

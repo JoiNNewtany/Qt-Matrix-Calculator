@@ -36,6 +36,8 @@ private slots:
 
     void on_selectionBox2_currentIndexChanged(int index);
 
+    void on_exportButton_clicked();
+
 private:
     Ui::Widget *ui;
 
