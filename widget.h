@@ -20,9 +20,6 @@ public:
     // Changes size of a matrix table and Fills it with empty elements
     void fillMatrixTable(QTableWidget *matrixTable, int rows, int columns);
 
-    // Checks if a given value is correct for writing to a table
-    bool isValueCorrect(QString value);
-
     // Parses a text file with matrices to a vector of QSquareMatrix
     QVector<QSquareMatrix<double>> Parse(QString fileName);
 
@@ -35,12 +32,14 @@ private slots:
 
     void on_importButton_clicked();
 
+    void on_selectionBox1_currentIndexChanged(int index);
+
+    void on_selectionBox2_currentIndexChanged(int index);
+
 private:
     Ui::Widget *ui;
 
-    // MatrixList is the global vector of imported matrices.
-    // TableList will consist of three matrices from matrix tables
-    // where 0 is first matrix, 1 is second and 2 is result matrix.
-    QVector<QSquareMatrix<double>> matrixList, tableList;
+    // Global vector of imported matrices.
+    QVector<QSquareMatrix<double>> matrixList;
 };
 #endif // WIDGET_H
