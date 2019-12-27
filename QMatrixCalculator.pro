@@ -20,6 +20,7 @@ SOURCES += \
     widget.cpp
 
 HEADERS += \
+    QSquareMatrix.h \
     widget.h
 
 FORMS += \
