@@ -38,6 +38,8 @@ private slots:
 
     void on_exportButton_clicked();
 
+    void on_matrixTable2_cellChanged(int row, int column);
+
 private:
     Ui::Widget *ui;
 

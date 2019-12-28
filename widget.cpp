@@ -119,27 +119,48 @@ void Widget::on_sizeBox_valueChanged(int arg1)
 
 void Widget::on_matrixTable1_cellChanged(int row, int column)
 {
-    /* If a cell is changed, check if an index in
-       the selectionBox is selected and if new data is correct.
-       If so, overwrite that matrix in the global list of matrices. */
+    // When a cell has been changed, check if new value is a number
+    // then if an imported matrix is present, change it's value
+    // if value is NaN, change it to 0
 
-//    if (ui->selectionBox1->currentIndex() >= 0)
-//    {
-//        QRegularExpression regex("^-?[0-9]\\d*(\\.\\d+)?$");
-//        QString value = ui->matrixTable1->item(row, column)->text();
+    QRegularExpression regex("^-?[0-9]\\d*(\\.\\d+)?$");
+    QString value = ui->matrixTable1->item(row, column)->text();
 
-//        if (regex.match(value).hasMatch())
-//        {
-//            for(int i = 0; i < ui->matrixTable1->rowCount(); i++)
-//            {
-//                for(int j = 0; j < ui->matrixTable1->columnCount(); j++)
-//                {
-//                    matrixList[ui->selectionBox1->currentIndex()][i][j] =
-//                            ui->matrixTable1->item(i,j)->text().toDouble();
-//                }
-//            }
-//        }
-//    }
+    if (regex.match(value).hasMatch())
+    {
+        if (ui->selectionBox1->currentIndex() >= 0 &&
+            matrixList.size() > 0)
+        {
+            matrixList[ui->selectionBox1->currentIndex()][row][column] =
+                    ui->matrixTable1->item(row, column)->text().toDouble();
+        }
+    }
+    else
+    {
+        //ui->matrixTable1->item(row, column)->setText("0");
+    }
+}
+
+void Widget::on_matrixTable2_cellChanged(int row, int column)
+{
+    // Value check, same as on_matrixTable1_cellChanged
+
+    QRegularExpression regex("^-?[0-9]\\d*(\\.\\d+)?$");
+    QString value = ui->matrixTable2->item(row, column)->text();
+
+    if (regex.match(value).hasMatch())
+    {
+        if (ui->selectionBox2->currentIndex() >= 0 &&
+            matrixList.size() > 0)
+        {
+            matrixList[ui->selectionBox2->currentIndex()][row][column] =
+                    ui->matrixTable2->item(row, column)->text().toDouble();
+        }
+    }
+    else
+    {
+        //ui->matrixTable2->item(row, column)->setText("0");
+    }
 }
 
 void Widget::on_calculateButton_clicked()
@@ -215,6 +236,7 @@ void Widget::on_calculateButton_clicked()
         break;
     case 3: // Inversion
 
+
         qDebug() << "CalculationLog: Inversion triggered.";
 
         break;
@@ -223,6 +245,13 @@ void Widget::on_calculateButton_clicked()
         result = matrix1;
         result.transpose();
         qDebug() << "CalculationLog: Transposition triggered.";
+
+        break;
+
+    case 5: // Determinant
+
+        result[0][0] = QSquareMatrix<double>::determinant(matrix1.getQVectorMatrix());
+        qDebug() << "CalculationLog: Determinant triggered.";
 
         break;
     }
@@ -250,7 +279,8 @@ void Widget::on_importButton_clicked()
     // Check if file exists and wether it's actually a file
     if (fileCheck.exists() && fileCheck.isFile())
     {
-        matrixList = Parse(fileName);
+        //matrixList.clear();
+        matrixList += Parse(fileName);
     }
     else
     {
@@ -278,24 +308,27 @@ void Widget::on_selectionBox1_currentIndexChanged(int index)
 {
     // Matrix loading for selection box 1
 
-    ui->matrixTable1->clear();
-
-    if(matrixList.size())
+    if (index >= 0) // In case selection box is being cleared
     {
-        fillMatrixTable(ui->matrixTable1,
-                        matrixList[index].size(),
-                        matrixList[index].size());
-        //ui->matrixTable1->setColumnCount(matrixList[index].size());
-        //ui->matrixTable1->setRowCount(matrixList[index].size());
+        ui->matrixTable1->clear();
 
-        for(int i = 0; i < matrixList[index].size(); i++)
+        if(matrixList.size())
         {
-            for(int j = 0; j < matrixList[index][i].size(); j++)
+            fillMatrixTable(ui->matrixTable1,
+                            matrixList[index].size(),
+                            matrixList[index].size());
+            //ui->matrixTable1->setColumnCount(matrixList[index].size());
+            //ui->matrixTable1->setRowCount(matrixList[index].size());
+
+            for(int i = 0; i < matrixList[index].size(); i++)
             {
-                //QTableWidgetItem *item = new QTableWidgetItem;
-                //item->setText(QString::number(matrixList[index][i][j]));
-                //ui->matrixTable1->setItem(i, j, item);
-                ui->matrixTable1->item(i, j)->setText(QString::number(matrixList[index][i][j]));
+                for(int j = 0; j < matrixList[index][i].size(); j++)
+                {
+                    //QTableWidgetItem *item = new QTableWidgetItem;
+                    //item->setText(QString::number(matrixList[index][i][j]));
+                    //ui->matrixTable1->setItem(i, j, item);
+                    ui->matrixTable1->item(i, j)->setText(QString::number(matrixList[index][i][j]));
+                }
             }
         }
     }
@@ -305,24 +338,27 @@ void Widget::on_selectionBox2_currentIndexChanged(int index)
 {
     // Matrix loading for selection box 2
 
-    ui->matrixTable2->clear();
-
-    if(matrixList.size())
+    if (index >= 0) // In case selection box is being cleared
     {
-        fillMatrixTable(ui->matrixTable2,
-                        matrixList[index].size(),
-                        matrixList[index].size());
-        //ui->matrixTable2->setColumnCount(matrixList[index].size());
-        //ui->matrixTable2->setRowCount(matrixList[index].size());
+        ui->matrixTable2->clear();
 
-        for(int i = 0; i < matrixList[index].size(); i++)
+        if(matrixList.size())
         {
-            for(int j = 0; j < matrixList[index][i].size(); j++)
+            fillMatrixTable(ui->matrixTable2,
+                            matrixList[index].size(),
+                            matrixList[index].size());
+            //ui->matrixTable2->setColumnCount(matrixList[index].size());
+            //ui->matrixTable2->setRowCount(matrixList[index].size());
+
+            for(int i = 0; i < matrixList[index].size(); i++)
             {
-                //QTableWidgetItem *item = new QTableWidgetItem;
-                //item->setText(QString::number(matrixList[index][i][j]));
-                //ui->matrixTable2->setItem(i, j, item);
-                ui->matrixTable2->item(i, j)->setText(QString::number(matrixList[index][i][j]));
+                for(int j = 0; j < matrixList[index][i].size(); j++)
+                {
+                    //QTableWidgetItem *item = new QTableWidgetItem;
+                    //item->setText(QString::number(matrixList[index][i][j]));
+                    //ui->matrixTable2->setItem(i, j, item);
+                    ui->matrixTable2->item(i, j)->setText(QString::number(matrixList[index][i][j]));
+                }
             }
         }
     }
@@ -330,7 +366,7 @@ void Widget::on_selectionBox2_currentIndexChanged(int index)
 
 void Widget::on_exportButton_clicked()
 {
-    QString dir = QFileDialog::getOpenFileName(this,"Export Location",
+    QString dir = QFileDialog::getSaveFileName(this,"Export Location",
                                                QApplication::applicationDirPath(), "*.txt");
     QFile file(dir);
 
@@ -352,3 +388,4 @@ void Widget::on_exportButton_clicked()
         qDebug() << "ExportError: Unable to write to file.";
     }
 }
+

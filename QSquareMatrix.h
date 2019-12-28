@@ -23,13 +23,15 @@ class QSquareMatrix
 
         void debug_print(){ qDebug() << matrix; }
 
-        float determinant(); // https://codereview.stackexchange.com/a/200624
+        static double determinant(QVector<QVector<T>> matrix); // https://codereview.stackexchange.com/a/200624
 
         int size(){ return matrix.size(); }
 
         void append(QVector<T> vector){ matrix.append(vector); }
 
         void clear(){ matrix.clear(); }
+
+        QSquareMatrix<T> Inverse();
 
         QVector<QVector<T>> getQVectorMatrix(){ return matrix; }
         void getMatrixFromQVector(QVector<QVector<T>> _matrix){ *this->matrix = _matrix; }
@@ -180,9 +182,9 @@ QSquareMatrix<T>::~QSquareMatrix()
 }
 
 template<class T>
-float QSquareMatrix<T>::determinant()
+double QSquareMatrix<T>::determinant(QVector<QVector<T>> matrix)
 {
-    float det = 0.; // the determinant value will be stored here
+    double det = 0; // the determinant value will be stored here
 
     if (matrix.size() == 1)
     {
@@ -204,11 +206,11 @@ float QSquareMatrix<T>::determinant()
             //this loop iterate on each elements of the first row in the matrix.
             //at each element we cancel the row and column it exist in
             //and form a matrix from the rest of the elements in the matrix
-            vector<vector<T>> TempMatrix; // to hold the shaped matrix;
+            QVector<QVector<T>> TempMatrix; // to hold the shaped matrix;
             for (int i = 1; i < matrix.size(); i++)
             {
                 // iteration will start from row one cancelling the first row values
-                vector<T> TempRow;
+                QVector<T> TempRow;
                 for (int j = 0; j < matrix[i].size(); j++)
                 {
                     // iteration will pass all cells of the i row excluding the j
@@ -224,13 +226,19 @@ float QSquareMatrix<T>::determinant()
                 //we add it to the vector temp which is the vector where the new
                 //matrix will be formed
             }
-            det = det + matrix[0][p] * pow(-1, p) * CalcDeterminant(TempMatrix);
+            det = det + matrix[0][p] * pow(-1, p) * QSquareMatrix::determinant(TempMatrix);
             //then we calculate the value of determinant by using a recursive way
             //where we re-call the function by passing to it the new formed matrix
             //we keep doing this until we get our determinant
         }
         return det;
     }
+}
+
+template <class T>
+QSquareMatrix<T> QSquareMatrix<T>::Inverse()
+{
+
 }
 
 // Operators
