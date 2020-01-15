@@ -31,7 +31,7 @@ class QSquareMatrix
 
         void clear(){ matrix.clear(); }
 
-        QSquareMatrix<T> Inverse();
+        /*QSquareMatrix<T>*/void Inverse();
 
         QVector<QVector<T>> getQVectorMatrix(){ return matrix; }
         void getMatrixFromQVector(QVector<QVector<T>> _matrix){ *this->matrix = _matrix; }
@@ -236,9 +236,69 @@ double QSquareMatrix<T>::determinant(QVector<QVector<T>> matrix)
 }
 
 template <class T>
-QSquareMatrix<T> QSquareMatrix<T>::Inverse()
+/*QSquareMatrix<T>*/void QSquareMatrix<T>::Inverse()
 {
+    QSquareMatrix<T> temp_matrix, result_matrix;
+    int size = matrix.size();
+    T temp;
 
+    temp_matrix.resize(size);
+    result_matrix.matrix = matrix;
+
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            temp_matrix[i][j] = 0.0;
+
+            if (i == j)
+            {
+                temp_matrix[i][j] = 1.0;
+            }
+        }
+    }
+
+    for (int k = 0; k < size; k++)
+    {
+        temp = matrix[k][k];
+
+        for (int j = 0; j < size; j++)
+        {
+            matrix[k][j] /= temp;
+            temp_matrix[k][j] /= temp;
+        }
+
+        for (int i = k + 1; i < size; i++)
+        {
+            temp = matrix[i][k];
+
+            for (int j = 0; j < size; j++)
+            {
+                matrix[i][j] -= matrix[k][j] * temp;
+                temp_matrix[i][j] -= temp_matrix[k][j] * temp;
+            }
+        }
+    }
+
+    for (int k = size - 1; k > 0; k--)
+    {
+        for (int i = k - 1; i >= 0; i--)
+        {
+            temp = matrix[i][k];
+
+            for (int j = 0; j < size; j++)
+            {
+                matrix[i][j] -= matrix[k][j] * temp;
+                temp_matrix[i][j] -= temp_matrix[k][j] * temp;
+            }
+        }
+    }
+
+    for (int i = 0; i < size; i++)
+        for (int j = 0; j < size; j++)
+            matrix[i][j] = temp_matrix[i][j];
+
+    //return matrix;
 }
 
 // Operators

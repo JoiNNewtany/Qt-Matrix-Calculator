@@ -236,7 +236,8 @@ void Widget::on_calculateButton_clicked()
         break;
     case 3: // Inversion
 
-
+        result = matrix1;
+        result.Inverse();
         qDebug() << "CalculationLog: Inversion triggered.";
 
         break;
